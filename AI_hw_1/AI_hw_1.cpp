@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <deque>
 #include <queue>
@@ -18,21 +19,23 @@ void BFS(int d){
 int main(){
     fstream file("IntroAI_PR1_test.txt"); 
     string search;
-    while(file>>search){
-        cout<<search<<endl;
+    string str;
+    while(getline(file , str)){
+        stringstream ss(str);
+        ss>>search;
         int x , y;
-        file>>x;
-        file>>y;
-        cout<<x<<" "<<y<<" "<<endl;
-        int step;
-        vector <int> steps ;
-        while(file>>step){
-            cout<<step<<" ";
-            steps.push_back(step);
+        ss>>x>>y;
+        int temp;
+        cout<<search<<" ";
+        cout<<x<<" "<<y<<" ";
+
+        vector<int> steps;
+        while(ss>>temp){
+            steps.push_back(temp);
+            cout<<temp<<" ";
         }
-        
         cout<<endl;
-        
+
     }
 
 }
