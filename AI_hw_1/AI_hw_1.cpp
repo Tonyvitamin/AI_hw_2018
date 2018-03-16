@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include <deque>
 #include <queue>
 #include <map>
@@ -9,10 +10,27 @@
 
 
 using namespace std;
+int x , y;
+class f_function{
+public:
+    bool operator()(pair<int, int> n1, pair<int, int> n2){
+
+    }
+};
+
+int heuristic(int posx, int posy){
+    int dx = abs((posx-x)/9);
+    int dy = abs((posy-y)/9);
+    return dx+dy;
+}
+void A_search(deque<int>steps, int x, int y){
+    priority_queue<pair<int, int>, vector<pair<int, int> >, f_function> node;
 
 
+}
 void BFS(deque<int> steps, int x, int y){
     deque<int> xpos, ypos;
+    int node_numbers = 0;
     xpos.push_back(0);
     ypos.push_back(0);
     cout<<"BFS search start :\n target is ("<<x<<", "<<y<<")"<<endl;
@@ -24,7 +42,9 @@ void BFS(deque<int> steps, int x, int y){
         deque<int> tempx , tempy;
         cout<<"next step is "<<next_step<<endl;
         while(!xpos.empty()){
-            // +x 
+            
+            // +x
+            node_numbers++; 
             cur_x = xpos.front() + next_step;
             cur_y = ypos.front();
             tempx.push_back(cur_x);
@@ -35,6 +55,7 @@ void BFS(deque<int> steps, int x, int y){
                 return;
             }
             //+y
+            node_numbers++;
             cur_x = xpos.front();
             cur_y = ypos.front() + next_step;
             tempx.push_back(cur_x);
@@ -45,6 +66,7 @@ void BFS(deque<int> steps, int x, int y){
                 return;
             }  
             //-x
+            node_numbers++;
             cur_x = xpos.front() - next_step;
             cur_y = ypos.front();
             tempx.push_back(cur_x);
@@ -55,6 +77,7 @@ void BFS(deque<int> steps, int x, int y){
                 return;
             }
             //-y
+            node_numbers++;
             cur_x = xpos.front();
             cur_y = ypos.front() - next_step;
             tempx.push_back(cur_x);
@@ -65,6 +88,7 @@ void BFS(deque<int> steps, int x, int y){
                 return;
             }
             //skip
+            node_numbers++;
             tempx.push_back(xpos.front());
             tempy.push_back(ypos.front());
             cout<<"after skip "<< xpos.front() << " "<<ypos.front()<<endl;
@@ -152,21 +176,16 @@ void IDS(deque<int>steps, int x, int y){
 
 
 }
-int heuristic(){
 
-}
-void A_search(deque<int>steps, int x, int y){
-
-}
 
 int main(){
-    fstream file("IntroAI_PR1_test1.txt"); 
+    fstream file("IntroAI_PR1_test3.txt"); 
     string search;
     string str;
     while(getline(file , str)){
         stringstream ss(str);
         ss>>search;
-        int x , y;
+        //int x , y;
         ss>>x>>y;
         int temp;
         cout<<search<<" ";
@@ -182,9 +201,8 @@ int main(){
             BFS(steps, x, y);
         else if(search == "IDS")
             IDS(steps, x, y);
-        else 
+        else if(search == "A*")
             A_search(steps, x, y);
-
 
     }
 
