@@ -7,7 +7,7 @@
 #include <queue>
 #include <map>
 #include <string>
-
+#include <sys/time.h>
 
 using namespace std;
 int x , y;
@@ -197,12 +197,18 @@ int main(){
             cout<<temp<<" ";
         }
         cout<<endl;
+        struct timeval start , end , diff;
+        gettimeofday(&start, NULL);
         if(search == "BFS")
             BFS(steps, x, y);
         else if(search == "IDS")
             IDS(steps, x, y);
         else if(search == "A*")
             A_search(steps, x, y);
+        gettimeofday(&end, NULL);
+        timersub(&end, &start, &diff);
+        double time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
+        cout<<"Time cost is "<<time_used<<" sec";
 
     }
 
