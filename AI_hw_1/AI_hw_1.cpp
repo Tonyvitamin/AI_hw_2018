@@ -15,13 +15,23 @@ enum dir_type {START, XPLUS, YPLUS, XMINUS, YMINUS, SKIP};
 
 using namespace std;
 float x , y;
-struct node {
+struct node_bfs{
+    int xpos;
+    int ypos;
+    int movement;
+    int depth;
+    int dir;
+    struct node_bfs * last;
+};
+struct node_A {
     int xpos;
     int ypos;
     int depth;
+    int dir;
     int f;
     int g;
     int h;
+    struct node_A *last;
 };
 struct node_ids{
     int xpos;
@@ -32,89 +42,150 @@ struct node_ids{
 };
 class f_function{
 public:
-    bool operator()(node n1, node n2){
-        return n1.f > n2.f;
+    bool operator()(node_A* n1, node_A* n2){
+        return n1->f > n2->f;
     }
 };
 void BFS(deque<int> steps, int x, int y){
-    deque<int> xpos, ypos;
+    // create deque for bfs and enter the root
+    deque<node_bfs *> bfs;
+    deque<node_bfs *> record;
+    struct node_bfs* start = new node_bfs();
+    start->xpos = 0;
+    start->ypos = 0;
+    start->movement = 0;
+    start->depth = 0;
+    start->dir = START;
+    start->last = start;
+    bfs.push_back(start);
+    record.push_back(start);
     int node_numbers = 0;
-    xpos.push_back(0);
-    ypos.push_back(0);
-    cout<<"BFS search start :\n target is ("<<x<<", "<<y<<")"<<endl;
+    int depth = 0;
+
+    cout<<"BFS Search starts :\n target is ("<<x<<", "<<y<<")"<<endl;
+    int judge = 0;
+
     while(!steps.empty()){
         int cur_x , cur_y;
         int next_step = steps.front();
         steps.pop_front();
+        
         // create a temp deque to catch nodes with the same depth
-        deque<int> tempx , tempy;
-        cout<<"next step is "<<next_step<<endl;
-        while(!xpos.empty()){
+        deque<node_bfs *> temp_node;
+
+        //cout<<"Current step is "<<next_step<<endl;
+        while(!bfs.empty()){
             
             // +x
             node_numbers++; 
-            cur_x = xpos.front() + next_step;
-            cur_y = ypos.front();
-            tempx.push_back(cur_x);
-            tempy.push_back(cur_y);
+            struct node_bfs * xplus = new node_bfs();
+            xplus->xpos = bfs.front()->xpos + next_step;
+            xplus->ypos = bfs.front()->ypos;
+            xplus->movement = next_step;
+            xplus->depth = depth + 1;
+            xplus->dir = XPLUS;
+            xplus->last = bfs.front();
+            temp_node.push_back(xplus);
+            record.push_back(xplus);
             //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
-            if(x==cur_x && y==cur_y){
+            if(x==xplus->xpos && y==xplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                return;
+                judge = 1;
+                break;
             }
             //+y
             node_numbers++;
-            cur_x = xpos.front();
-            cur_y = ypos.front() + next_step;
-            tempx.push_back(cur_x);
-            tempy.push_back(cur_y);
-            //cout<<"after +y "<< cur_x << " "<<cur_y<<endl;
-            if(x==cur_x && y==cur_y){
+            struct node_bfs * yplus = new node_bfs();
+            yplus->xpos = bfs.front()->xpos;
+            yplus->ypos = bfs.front()->ypos + next_step;
+            yplus->movement = next_step;
+            yplus->depth = depth + 1;
+            yplus->dir = YPLUS;
+            yplus->last = bfs.front();
+            temp_node.push_back(yplus);
+            record.push_back(yplus);
+            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
+            if(x==yplus->xpos && y==yplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                return;
-            }  
+                judge = 1;
+                break;
+            }
+
             //-x
             node_numbers++;
-            cur_x = xpos.front() - next_step;
-            cur_y = ypos.front();
-            tempx.push_back(cur_x);
-            tempy.push_back(cur_y);
-            //cout<<"after -x "<< cur_x << " "<<cur_y<<endl;
-            if(x==cur_x && y==cur_y){
+            struct node_bfs * xminus = new node_bfs();
+            xminus->xpos = bfs.front()->xpos - next_step;
+            xminus->ypos = bfs.front()->ypos;
+            xminus->movement = next_step;
+            xminus->depth = depth + 1;
+            xminus->dir = XMINUS;
+            xminus->last = bfs.front();
+            temp_node.push_back(xminus);
+            record.push_back(xminus);
+            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
+            if(x==xminus->xpos && y==xminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                return;
+                judge = 1;
+                break;
             }
             //-y
             node_numbers++;
-            cur_x = xpos.front();
-            cur_y = ypos.front() - next_step;
-            tempx.push_back(cur_x);
-            tempy.push_back(cur_y);
-            //cout<<"after -y "<< cur_x << " "<<cur_y<<endl;
-            if(x==cur_x && y==cur_y){
+            struct node_bfs * yminus = new node_bfs();
+            yminus->xpos = bfs.front()->xpos;
+            yminus->ypos = bfs.front()->ypos - next_step;
+            yminus->movement = next_step;
+            yminus->depth = depth + 1;
+            yminus->dir = YMINUS;
+            yminus->last = bfs.front();
+            temp_node.push_back(yminus);
+            record.push_back(yminus);
+            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
+            if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                return;
+                judge = 1;
+                break;
             }
             //skip
             node_numbers++;
-            tempx.push_back(xpos.front());
-            tempy.push_back(ypos.front());
-            //cout<<"after skip "<< xpos.front() << " "<<ypos.front()<<endl;
-            if(x==cur_x && y==cur_y){
+            struct node_bfs * skip = new node_bfs();
+            skip->xpos = bfs.front()->xpos;
+            skip->ypos = bfs.front()->ypos;
+            skip->movement = next_step;
+            skip->depth = depth + 1;
+            skip->dir = SKIP;
+            skip->last = bfs.front();
+            temp_node.push_back(skip);
+            record.push_back(skip);
+            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
+            if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                return;
+                judge = 1;
+                break;
             }
-            xpos.pop_front();
-            ypos.pop_front();
+            bfs.pop_front();
         }
         // put all node into the real deque 
-        while(!tempx.empty()){
-            xpos.push_back(tempx.front());
-            ypos.push_back(tempy.front());
-            tempx.pop_front();
-            tempy.pop_front();
+        if(judge == 0){
+            while(!temp_node.empty()){
+                bfs.push_back(temp_node.front());
+                temp_node.pop_front();
+            }
         }
-
+        else {
+            struct node_bfs * cur_node = record[node_numbers];
+            deque<node_bfs * > path;
+            path.push_front(cur_node);
+            while(cur_node->last != cur_node){
+                cur_node = cur_node->last;
+                path.push_front(cur_node);
+            }
+            while(!path.empty()){
+                cout<<path.front()->xpos<<" "<<path.front()->ypos<<endl;
+                path.pop_front();
+            }
+            return;
+        }
+        depth++;
     }
 }
 int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_limit){
@@ -124,7 +195,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
         return 1;
     }
     if(top.depth == depth_limit){
-        cout<<"After move "<<top.movement<<" in the direction "<<top.this_move_dir<<", reach depth limit "<<depth_limit<<" at ("<<top.xpos<<", "<<top.ypos<<")"<<endl;
+        //cout<<"After move "<<top.movement<<" in the direction "<<top.this_move_dir<<", reach depth limit "<<depth_limit<<" at ("<<top.xpos<<", "<<top.ypos<<")"<<endl;
         return 0;
     }
 
@@ -195,7 +266,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
 void IDS(deque<int>steps, int x, int y){
     int depth = steps.size();
     vector<node_ids> ids;
-    cout<<"IDS search start :\n target is ("<<x<<","<<y<<") with depth "<<depth<<endl;
+    cout<<"IDS Search starts :\n target is ("<<x<<","<<y<<")"<<endl;
 
     for(int i = 0 ; i<depth ; i++){
         struct node_ids first ;
@@ -210,9 +281,9 @@ void IDS(deque<int>steps, int x, int y){
         int topx = top.xpos;
         int topy = top.ypos;
         int top_depth = top.depth;
-        cout<<"Current start depth is "<<i<<endl;
-        cout<<"Current start node is ("<<topx<<", "<<topy<<")"<<endl;
-        cout<<"Current start step is "<<top_depth<<endl;
+        //cout<<"Current start depth is "<<i<<endl;
+        //cout<<"Current start node is ("<<topx<<", "<<topy<<")"<<endl;
+        //cout<<"Current start step is "<<top_depth<<endl;
 
         int judge = DFS(steps, x, y, ids, i);
         if(judge == 1){
@@ -233,92 +304,119 @@ int heuristic(float posx, float posy){
     return dx+dy;
 }
 void A_search(deque<int>steps, int x, int y){
-    priority_queue<node, vector<node>, f_function> p_queue;
 
+    int depth = steps.size();
+    cout<<"A* Search starts :\n target is ("<<x<<","<<y<<")"<<endl;
+    priority_queue<node_A*, vector<node_A*>, f_function> p_queue;
+    deque<node_A *> record;
     int start_f = heuristic(0, 0);
-    struct node  first ;
-    first.xpos = 0;
-    first.ypos = 0;
-    first.f = 0 + start_f;
-    first.g = 0;
-    first.h = start_f;
-    first.depth = 0;
-    p_queue.push(first);
+    struct node_A  *first = new node_A();
+    first->xpos = 0;
+    first->ypos = 0;
+    first->f = 0 + start_f;
+    first->g = 0;
+    first->h = start_f;
+    first->depth = 0;
+    first->dir = START;
+    first->last = first;
 
+    p_queue.push(first);
+    record.push_back(first);
     int i = 0;
     while(!p_queue.empty()){
-        //out<<"here"<<endl;
-        struct node cur = p_queue.top();
-        int depth = cur.depth;
+        struct node_A *cur_node = p_queue.top();
+        record.push_back(cur_node);
+        int depth = cur_node->depth;
         int cur_step = steps[depth];
 
-        if(cur.xpos == x && cur.ypos== y){
+        if(cur_node->xpos == x && cur_node->ypos== y){
             cout<<"target address ("<<x<<", "<<y<<")"<<"found"<<endl;
-            return;
+            break;
         }
         /// +x
-        struct node x_plus;
-        x_plus.xpos = cur.xpos + cur_step;
-        x_plus.ypos = cur.ypos;
-        int x_plus_heu = heuristic(x_plus.xpos , x_plus.ypos);
-        x_plus.f = depth+1 + x_plus_heu;
-        x_plus.g = depth+1;
-        x_plus.h = x_plus_heu;
-        x_plus.depth = depth+1;
+        struct node_A* x_plus = new node_A();
+        x_plus->xpos = cur_node->xpos + cur_step;
+        x_plus->ypos = cur_node->ypos;
+        int x_plus_heu = heuristic(x_plus->xpos , x_plus->ypos);
+        x_plus->f = depth+1 + x_plus_heu;
+        x_plus->g = depth+1;
+        x_plus->h = x_plus_heu;
+        x_plus->depth = depth+1;
+        x_plus->dir = XPLUS;
+        x_plus->last = cur_node;
         p_queue.push(x_plus);
 
         // +y
-        struct node y_plus;
-        y_plus.xpos = cur.xpos;
-        y_plus.ypos = cur.ypos + cur_step;
-        int y_plus_heu = heuristic(y_plus.xpos , y_plus.ypos);
-        y_plus.f = depth+1 + y_plus_heu;
-        y_plus.g = depth+1;
-        y_plus.h = y_plus_heu;
-        y_plus.depth = depth+1;
+        struct node_A* y_plus = new node_A();
+        y_plus->xpos = cur_node->xpos;
+        y_plus->ypos = cur_node->ypos + cur_step;
+        int y_plus_heu = heuristic(y_plus->xpos , y_plus->ypos);
+        y_plus->f = depth+1 + y_plus_heu;
+        y_plus->g = depth+1;
+        y_plus->h = y_plus_heu;
+        y_plus->depth = depth+1;
+        y_plus->dir = YPLUS;
+        y_plus->last = cur_node;
         p_queue.push(y_plus);
 
         // -x
-        struct node x_minus;
-        x_minus.xpos = cur.xpos - cur_step;
-        x_minus.ypos = cur.ypos;
-        int x_minus_heu = heuristic(x_minus.xpos , x_minus.ypos);
-        x_minus.f = depth+1 + x_minus_heu;
-        x_minus.g = depth+1;
-        x_minus.h = x_minus_heu;
-        x_minus.depth = depth+1;
+        struct node_A* x_minus = new node_A();
+        x_minus->xpos = cur_node->xpos - cur_step;
+        x_minus->ypos = cur_node->ypos;
+        int x_minus_heu = heuristic(x_minus->xpos , x_minus->ypos);
+        x_minus->f = depth+1 + x_minus_heu;
+        x_minus->g = depth+1;
+        x_minus->h = x_minus_heu;
+        x_minus->depth = depth+1;
+        x_minus->dir = XMINUS;
+        x_minus->last = cur_node;
         p_queue.push(x_minus);
 
         // -y
-        struct node y_minus;
-        y_minus.xpos = cur.xpos;
-        y_minus.ypos = cur.ypos - cur_step;
-        int y_minus_heu = heuristic(y_minus.xpos , y_minus.ypos);
-        y_minus.f = depth+1 + y_minus_heu;
-        y_minus.g = depth+1;
-        y_minus.h = y_minus_heu;
-        y_minus.depth = depth+1;
+        struct node_A* y_minus = new node_A();
+        y_minus->xpos = cur_node->xpos;
+        y_minus->ypos = cur_node->ypos - cur_step;
+        int y_minus_heu = heuristic(y_minus->xpos , y_minus->ypos);
+        y_minus->f = depth+1 + y_minus_heu;
+        y_minus->g = depth+1;
+        y_minus->h = y_minus_heu;
+        y_minus->depth = depth+1;
+        y_minus->dir = YMINUS;
+        y_minus->last = cur_node;
         p_queue.push(y_minus);
 
         // skip
-        struct node skip;
-        skip.xpos = cur.xpos;
-        skip.ypos = cur.ypos;
-        int skip_heu = heuristic(skip.xpos , skip.ypos);
-        skip.f = depth+1 + skip_heu;
-        skip.g = depth+1;
-        skip.h = skip_heu;
-        skip.depth = depth+1;
+        struct node_A* skip = new node_A();
+        skip->xpos = cur_node->xpos;
+        skip->ypos = cur_node->ypos;
+        int skip_heu = heuristic(skip->xpos , skip->ypos);
+        skip->f = depth+1 + skip_heu;
+        skip->g = depth+1;
+        skip->h = skip_heu;
+        skip->depth = depth+1;
+        skip->dir = SKIP;
+        skip->last = cur_node;
         p_queue.push(skip);
         
         p_queue.pop();
     }
+    struct node_A * temp = record.back();
+    deque<node_A*> path;
+    path.push_back(temp);
+    while(temp->last != temp){
+        temp = temp->last;
+        path.push_front(temp);
+    }
+    while(!path.empty()){
+        cout<<path.front()->xpos<<" "<<path.front()->ypos<<" at depth "<<path.front()->depth<<endl;
+        path.pop_front();
+   }
 }
 
 
 
 int main(){
-    fstream file("IntroAI_PR1_test1.txt"); 
+    fstream file("IntroAI_PR1_test.txt"); 
     string search;
     string str;
     while(getline(file , str)){
@@ -347,8 +445,6 @@ int main(){
         gettimeofday(&end, NULL);
         timersub(&end, &start, &diff);
         double time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-        cout<<"Time cost is "<<time_used<<" sec"<<endl;
-
+        cout<<"Time cost is "<<time_used<<" sec"<<endl<<endl;
     }
-
 }

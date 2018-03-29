@@ -1,4 +1,4 @@
-IDS -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
+˙IDS -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
 IDS search start :
  target is (-1,-4) with depth 15
 Current start depth is 0

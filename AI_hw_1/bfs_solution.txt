@@ -1,0 +1,26 @@
+BFS -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
+BFS Search starts :
+ target is (-1, -4)
+Current step is 2
+Current step is 7
+Current step is 6
+Current step is 3
+Current step is 5
+Reach the destination (-1, -4)
+After move3in direction 5address is (0, 0)
+After move5in direction 4address is (-1, -4)
+Time cost is 0.000437 sec
+BFS 22 9 5 3 9 7 4 2 1 3 5 6 2 8 1 3 7 7 4 4 2 9 8 6 1 7 2 5 5 4 
+BFS Search starts :
+ target is (22, 9)
+Current step is 5
+Current step is 3
+Current step is 9
+Current step is 7
+Current step is 4
+Current step is 2
+Current step is 1
+Reach the destination (22, 9)
+After move2in direction 5address is (0, 0)
+After move1in direction 1address is (22, 9)
+Time cost is 0.004914 sec
