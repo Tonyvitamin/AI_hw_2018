@@ -6,15 +6,17 @@
 #include <deque>
 #include <queue>
 #include <cmath>
-#include <map>
 #include <string>
 #include <sys/time.h>
 
 
+using namespace std;
 enum dir_type {START, XPLUS, YPLUS, XMINUS, YMINUS, SKIP};
 
-using namespace std;
-float x , y;
+/// external declaration is used for to count the current node expansion in IDS
+int cost = 1;
+////external declaration is convient for heuristc computation
+float x, y;
 struct node_bfs{
     int xpos;
     int ypos;
@@ -51,6 +53,10 @@ void BFS(deque<int> steps, int x, int y){
     // create deque for bfs and enter the root
     deque<node_bfs *> bfs;
     deque<node_bfs *> record;
+    ////////// start BFS ///////////
+    struct timeval tstart , tend , diff;
+    double time_used;
+    gettimeofday(&tstart, NULL);
     struct node_bfs* start = new node_bfs();
     start->xpos = 0;
     start->ypos = 0;
@@ -63,7 +69,7 @@ void BFS(deque<int> steps, int x, int y){
     int node_numbers = 0;
     int depth = 0;
     cout<<endl;
-    cout<<"BFS Search starts :\n target is ("<<x<<", "<<y<<")"<<endl;
+    cout<<"BFS Search starts :\ntarget is ("<<x<<", "<<y<<")"<<endl;
     int judge = 0;
     while(!steps.empty()){
         int cur_x , cur_y;
@@ -85,6 +91,9 @@ void BFS(deque<int> steps, int x, int y){
             record.push_back(xplus);
             if(x==xplus->xpos && y==xplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+                gettimeofday(&tend, NULL);
+                timersub(&tend, &tstart, &diff);
+                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
                 judge = 1;
                 break;
             }
@@ -101,6 +110,9 @@ void BFS(deque<int> steps, int x, int y){
             record.push_back(yplus);
             if(x==yplus->xpos && y==yplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+                gettimeofday(&tend, NULL);
+                timersub(&tend, &tstart, &diff);
+                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
                 judge = 1;
                 break;
             }
@@ -118,6 +130,9 @@ void BFS(deque<int> steps, int x, int y){
             record.push_back(xminus);
             if(x==xminus->xpos && y==xminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+                gettimeofday(&tend, NULL);
+                timersub(&tend, &tstart, &diff);
+                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
                 judge = 1;
                 break;
             }
@@ -134,6 +149,9 @@ void BFS(deque<int> steps, int x, int y){
             record.push_back(yminus);
             if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+                gettimeofday(&tend, NULL);
+                timersub(&tend, &tstart, &diff);
+                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
                 judge = 1;
                 break;
             }
@@ -150,6 +168,9 @@ void BFS(deque<int> steps, int x, int y){
             record.push_back(skip);
             if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+                gettimeofday(&tend, NULL);
+                timersub(&tend, &tstart, &diff);
+                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
                 judge = 1;
                 break;
             }
@@ -190,7 +211,8 @@ void BFS(deque<int> steps, int x, int y){
                 cout<<"("<<path.front()->xpos<<", "<<path.front()->ypos<<")"<<endl;
                 path.pop_front();
             }
-            cout<<"BFS costs "<<node_numbers<<" node expansion"<<endl;
+            cout<<"BFS costs "<<node_numbers+1<<" node expansion"<<endl;
+            cout<<"Time cost is "<<time_used<<" sec"<<endl<<endl;
             return;
         }
         depth++;
@@ -216,6 +238,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
     xplus.this_move_dir = XPLUS;
     cur_node.push_back(xplus);
     judge = DFS(steps, x, y, cur_node, depth_limit);
+    cost++;
     if(judge==1){
         return judge;
     }
@@ -228,6 +251,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
     yplus.this_move_dir = YPLUS;
     cur_node.push_back(yplus);
     judge = DFS(steps, x, y, cur_node, depth_limit);
+    cost++;
     if(judge==1){
         return judge;
     }
@@ -240,6 +264,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
     xminus.this_move_dir = XMINUS;
     cur_node.push_back(xminus);
     judge = DFS(steps, x, y, cur_node, depth_limit);
+    cost++;
     if(judge==1){
         return judge;
     }
@@ -252,6 +277,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
     yminus.this_move_dir = YMINUS;
     cur_node.push_back(yminus);
     judge = DFS(steps, x, y, cur_node, depth_limit);
+    cost++;
     if(judge==1){
         return judge;
     }
@@ -264,6 +290,7 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
     skip.this_move_dir = SKIP;
     cur_node.push_back(skip);
     judge = DFS(steps, x, y, cur_node, depth_limit);
+    cost++;
     if(judge==1){
         return judge;
     }
@@ -274,8 +301,11 @@ int DFS(deque<int>steps, int x, int y, vector<node_ids> &cur_node, int depth_lim
 void IDS(deque<int>steps, int x, int y){
     int depth = steps.size();
     vector<node_ids> ids;
-    cout<<"IDS Search starts :\n target is ("<<x<<","<<y<<")"<<endl;
-
+    cout<<"IDS Search starts :\ntarget is ("<<x<<","<<y<<")"<<endl;
+    ////// start IDS ///////////
+    struct timeval tstart , tend , diff;
+    double time_used;
+    gettimeofday(&tstart, NULL);
     for(int i = 0 ; i<depth ; i++){
         struct node_ids first ;
         first.xpos = 0;
@@ -284,17 +314,19 @@ void IDS(deque<int>steps, int x, int y){
         first.movement = 0;
         first.this_move_dir = 0;
         ids.push_back(first);
-        struct node_ids top;
-        top = ids.back();
-        int topx = top.xpos;
-        int topy = top.ypos;
-        int top_depth = top.depth;
+        //// look for the right path by DFS 
         int judge = DFS(steps, x, y, ids, i);
         if(judge == 1){
+            gettimeofday(&tend, NULL);
+            timersub(&tend, &tstart, &diff);
+            time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
             break;
         }
         ids.clear();
+        cost = 1;
     }
+
+    //// print the result 
     cout<<"The path IDS found :"<<endl;
     cout<<"initial     ("<<ids[0].xpos<<", "<<ids[0].ypos<<")"<<endl;
     for(int i = 1 ; i < ids.size() ; i++ ){
@@ -313,22 +345,27 @@ void IDS(deque<int>steps, int x, int y){
         cout<<")   "<<temp.movement<<"     (";
         cout<<temp.xpos<<", "<<temp.ypos<<")"<<endl;
     }
-    //cout<<"IDS "
+    cout<<"IDS costs "<<cost<<" node expansion"<<endl;
+    cout<<"Time cost is "<<time_used<<" sec"<<endl<<endl;
+    cost = 0;
 }
 int heuristic(float posx, float posy){
     int dx = floor((abs(posx-x))/9);
-    
     int dy = floor((abs(posy-y))/9);
-    //cout<<(abs(posx-x))/9<<" "<<(abs(posy-y))/9;
     return dx+dy;
 }
 void A_search(deque<int>steps, int x, int y){
     cout<<endl;
-    cout<<"A* Search starts :\n target is ("<<x<<","<<y<<")"<<endl;
+    cout<<"A* Search starts :\ntarget is ("<<x<<","<<y<<")"<<endl;
     int cost = 1;
     priority_queue<node_A*, vector<node_A*>, f_function> p_queue;
     deque<node_A *> record;
     
+    ////////// start A * search ////////
+    struct timeval tstart , tend , diff;
+    double time_used;
+    gettimeofday(&tstart, NULL);
+
     // push root into p_queue and record
     int start_f = heuristic(0, 0);
     struct node_A  *first = new node_A();
@@ -347,16 +384,21 @@ void A_search(deque<int>steps, int x, int y){
     // A* search starts here 
     while(!p_queue.empty()){
         struct node_A *cur_node = p_queue.top();
+        p_queue.pop();
         record.push_back(cur_node);
         int depth = cur_node->depth;
         int cur_step = steps[depth];
 
         if(cur_node->xpos == x && cur_node->ypos== y){
             cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
+            /////////// stop A * search /////////
+            gettimeofday(&tend, NULL);
+            timersub(&tend, &tstart, &diff);
+            time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
             break;
         }
 
-        /// +x
+        /// push +x node 
         struct node_A* x_plus = new node_A();
         x_plus->xpos = cur_node->xpos + cur_step;
         x_plus->ypos = cur_node->ypos;
@@ -371,7 +413,7 @@ void A_search(deque<int>steps, int x, int y){
         p_queue.push(x_plus);
         cost++;
 
-        // +y
+        // push +y node
         struct node_A* y_plus = new node_A();
         y_plus->xpos = cur_node->xpos;
         y_plus->ypos = cur_node->ypos + cur_step;
@@ -386,7 +428,7 @@ void A_search(deque<int>steps, int x, int y){
         p_queue.push(y_plus);
         cost++;
 
-        // -x
+        // push -x node
         struct node_A* x_minus = new node_A();
         x_minus->xpos = cur_node->xpos - cur_step;
         x_minus->ypos = cur_node->ypos;
@@ -401,7 +443,7 @@ void A_search(deque<int>steps, int x, int y){
         p_queue.push(x_minus);
         cost++;
 
-        // -y
+        // push -y node
         struct node_A* y_minus = new node_A();
         y_minus->xpos = cur_node->xpos;
         y_minus->ypos = cur_node->ypos - cur_step;
@@ -416,7 +458,7 @@ void A_search(deque<int>steps, int x, int y){
         p_queue.push(y_minus);
         cost++;
 
-        // skip
+        // push skip node
         struct node_A* skip = new node_A();
         skip->xpos = cur_node->xpos;
         skip->ypos = cur_node->ypos;
@@ -431,7 +473,6 @@ void A_search(deque<int>steps, int x, int y){
         p_queue.push(skip);
         cost++;
         
-        p_queue.pop();
     }
 
     // print out result 
@@ -463,18 +504,18 @@ void A_search(deque<int>steps, int x, int y){
     }
 
     cout<<endl<<"A* search costs "<<cost<<" node expansion"<<endl;
+    cout<<"Time cost is "<<time_used<<" sec"<<endl<<endl;
     return;
 }
-
-
 int main(){
     fstream file("IntroAI_PR1_test.txt"); 
     string search;
     string str;
+
+    ////// read the file /////////
     while(getline(file , str)){
         stringstream ss(str);
         ss>>search;
-        //int x , y;
         ss>>x>>y;
         int temp;
         cout<<search<<" ";
@@ -486,17 +527,12 @@ int main(){
             cout<<temp<<" ";
         }
         cout<<endl;
-        struct timeval start , end , diff;
-        gettimeofday(&start, NULL);
+    //////// choose the correponding method to search /////////
         if(search == "BFS")
             BFS(steps, x, y);
         else if(search == "IDS")
             IDS(steps, x, y);
         else if(search == "A*")
             A_search(steps, x, y);
-        gettimeofday(&end, NULL);
-        timersub(&end, &start, &diff);
-        double time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-        cout<<"Time cost is "<<time_used<<" sec"<<endl<<endl;
     }
 }
