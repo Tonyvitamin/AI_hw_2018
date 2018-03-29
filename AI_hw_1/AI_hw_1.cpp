@@ -27,6 +27,7 @@ struct node_A {
     int xpos;
     int ypos;
     int depth;
+    int movement;
     int dir;
     int f;
     int g;
@@ -61,21 +62,16 @@ void BFS(deque<int> steps, int x, int y){
     record.push_back(start);
     int node_numbers = 0;
     int depth = 0;
-
+    cout<<endl;
     cout<<"BFS Search starts :\n target is ("<<x<<", "<<y<<")"<<endl;
     int judge = 0;
-
     while(!steps.empty()){
         int cur_x , cur_y;
         int next_step = steps.front();
         steps.pop_front();
-        
         // create a temp deque to catch nodes with the same depth
         deque<node_bfs *> temp_node;
-
-        //cout<<"Current step is "<<next_step<<endl;
         while(!bfs.empty()){
-            
             // +x
             node_numbers++; 
             struct node_bfs * xplus = new node_bfs();
@@ -87,7 +83,6 @@ void BFS(deque<int> steps, int x, int y){
             xplus->last = bfs.front();
             temp_node.push_back(xplus);
             record.push_back(xplus);
-            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
             if(x==xplus->xpos && y==xplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
                 judge = 1;
@@ -104,7 +99,6 @@ void BFS(deque<int> steps, int x, int y){
             yplus->last = bfs.front();
             temp_node.push_back(yplus);
             record.push_back(yplus);
-            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
             if(x==yplus->xpos && y==yplus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
                 judge = 1;
@@ -122,7 +116,6 @@ void BFS(deque<int> steps, int x, int y){
             xminus->last = bfs.front();
             temp_node.push_back(xminus);
             record.push_back(xminus);
-            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
             if(x==xminus->xpos && y==xminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
                 judge = 1;
@@ -139,7 +132,6 @@ void BFS(deque<int> steps, int x, int y){
             yminus->last = bfs.front();
             temp_node.push_back(yminus);
             record.push_back(yminus);
-            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
             if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
                 judge = 1;
@@ -156,7 +148,6 @@ void BFS(deque<int> steps, int x, int y){
             skip->last = bfs.front();
             temp_node.push_back(skip);
             record.push_back(skip);
-            //cout<<"after +x "<< cur_x << " "<<cur_y<<endl;
             if(x==yminus->xpos && y==yminus->ypos){
                 cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
                 judge = 1;
@@ -179,10 +170,27 @@ void BFS(deque<int> steps, int x, int y){
                 cur_node = cur_node->last;
                 path.push_front(cur_node);
             }
+            cout<<"The path which BFS found :"<<endl;
+            cout<<"initial "<<"     ("<<path.front()->xpos<<", "<<path.front()->ypos<<")"<<endl;
+            path.pop_front();
             while(!path.empty()){
-                cout<<path.front()->xpos<<" "<<path.front()->ypos<<endl;
+                cout<<"(";
+                if(path.front()->dir == XPLUS)
+                    cout<<"x+";
+                else if (path.front()->dir == YPLUS)
+                    cout<<"y+";
+                else if (path.front()->dir == XMINUS)
+                    cout<<"x-";
+                else if(path.front()->dir == YMINUS)
+                    cout<<"y-";
+                else 
+                    cout<<"S";
+                cout<<") "<<path.front()->movement<<"   ";
+
+                cout<<"("<<path.front()->xpos<<", "<<path.front()->ypos<<")"<<endl;
                 path.pop_front();
             }
+            cout<<"BFS costs "<<node_numbers<<" node expansion"<<endl;
             return;
         }
         depth++;
@@ -281,20 +289,31 @@ void IDS(deque<int>steps, int x, int y){
         int topx = top.xpos;
         int topy = top.ypos;
         int top_depth = top.depth;
-        //cout<<"Current start depth is "<<i<<endl;
-        //cout<<"Current start node is ("<<topx<<", "<<topy<<")"<<endl;
-        //cout<<"Current start step is "<<top_depth<<endl;
-
         int judge = DFS(steps, x, y, ids, i);
         if(judge == 1){
             break;
         }
         ids.clear();
     }
-    for(int i = 0 ; i < ids.size() ; i++ ){
+    cout<<"The path IDS found :"<<endl;
+    cout<<"initial     ("<<ids[0].xpos<<", "<<ids[0].ypos<<")"<<endl;
+    for(int i = 1 ; i < ids.size() ; i++ ){
         struct node_ids temp = ids[i];
-        cout<<"direction is "<<temp.this_move_dir<<" move "<<temp.movement<<" ("<<temp.xpos<<", "<<temp.ypos<<")"<<endl;
+        cout<<"(";
+        if(temp.this_move_dir == XPLUS)
+            cout<<"x+";
+        else if(temp.this_move_dir == YPLUS)
+            cout<<"y+";
+        else if(temp.this_move_dir == XMINUS)
+            cout<<"x-";
+        else if(temp.this_move_dir == YMINUS)
+            cout<<"y-";
+        else 
+            cout<<"S";
+        cout<<")   "<<temp.movement<<"     (";
+        cout<<temp.xpos<<", "<<temp.ypos<<")"<<endl;
     }
+    //cout<<"IDS "
 }
 int heuristic(float posx, float posy){
     int dx = floor((abs(posx-x))/9);
@@ -304,11 +323,13 @@ int heuristic(float posx, float posy){
     return dx+dy;
 }
 void A_search(deque<int>steps, int x, int y){
-
-    int depth = steps.size();
+    cout<<endl;
     cout<<"A* Search starts :\n target is ("<<x<<","<<y<<")"<<endl;
+    int cost = 1;
     priority_queue<node_A*, vector<node_A*>, f_function> p_queue;
     deque<node_A *> record;
+    
+    // push root into p_queue and record
     int start_f = heuristic(0, 0);
     struct node_A  *first = new node_A();
     first->xpos = 0;
@@ -319,10 +340,11 @@ void A_search(deque<int>steps, int x, int y){
     first->depth = 0;
     first->dir = START;
     first->last = first;
-
+    first->movement = 0;
     p_queue.push(first);
     record.push_back(first);
-    int i = 0;
+
+    // A* search starts here 
     while(!p_queue.empty()){
         struct node_A *cur_node = p_queue.top();
         record.push_back(cur_node);
@@ -330,9 +352,10 @@ void A_search(deque<int>steps, int x, int y){
         int cur_step = steps[depth];
 
         if(cur_node->xpos == x && cur_node->ypos== y){
-            cout<<"target address ("<<x<<", "<<y<<")"<<"found"<<endl;
+            cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
             break;
         }
+
         /// +x
         struct node_A* x_plus = new node_A();
         x_plus->xpos = cur_node->xpos + cur_step;
@@ -344,7 +367,9 @@ void A_search(deque<int>steps, int x, int y){
         x_plus->depth = depth+1;
         x_plus->dir = XPLUS;
         x_plus->last = cur_node;
+        x_plus->movement = cur_step;
         p_queue.push(x_plus);
+        cost++;
 
         // +y
         struct node_A* y_plus = new node_A();
@@ -357,7 +382,9 @@ void A_search(deque<int>steps, int x, int y){
         y_plus->depth = depth+1;
         y_plus->dir = YPLUS;
         y_plus->last = cur_node;
+        y_plus->movement = cur_step;
         p_queue.push(y_plus);
+        cost++;
 
         // -x
         struct node_A* x_minus = new node_A();
@@ -370,7 +397,9 @@ void A_search(deque<int>steps, int x, int y){
         x_minus->depth = depth+1;
         x_minus->dir = XMINUS;
         x_minus->last = cur_node;
+        x_minus->movement = cur_step;
         p_queue.push(x_minus);
+        cost++;
 
         // -y
         struct node_A* y_minus = new node_A();
@@ -383,7 +412,9 @@ void A_search(deque<int>steps, int x, int y){
         y_minus->depth = depth+1;
         y_minus->dir = YMINUS;
         y_minus->last = cur_node;
+        y_minus->movement = cur_step;
         p_queue.push(y_minus);
+        cost++;
 
         // skip
         struct node_A* skip = new node_A();
@@ -396,10 +427,14 @@ void A_search(deque<int>steps, int x, int y){
         skip->depth = depth+1;
         skip->dir = SKIP;
         skip->last = cur_node;
+        skip->movement = cur_step;
         p_queue.push(skip);
+        cost++;
         
         p_queue.pop();
     }
+
+    // print out result 
     struct node_A * temp = record.back();
     deque<node_A*> path;
     path.push_back(temp);
@@ -407,12 +442,29 @@ void A_search(deque<int>steps, int x, int y){
         temp = temp->last;
         path.push_front(temp);
     }
+    cout<<"The path which A* search found :"<<endl;
+    cout<<"initial "<<"     ("<<path.front()->xpos<<", "<<path.front()->ypos<<")"<<endl;
+    path.pop_front();
     while(!path.empty()){
-        cout<<path.front()->xpos<<" "<<path.front()->ypos<<" at depth "<<path.front()->depth<<endl;
+        cout<<"(";
+        if(path.front()->dir == XPLUS)
+            cout<<"x+";
+        else if (path.front()->dir == YPLUS)
+            cout<<"y+";
+        else if (path.front()->dir == XMINUS)
+            cout<<"x-";
+        else if(path.front()->dir == YMINUS)
+            cout<<"y-";
+        else 
+            cout<<"S";
+        cout<<") "<<path.front()->movement<<"   ";
+        cout<<"("<<path.front()->xpos<<", "<<path.front()->ypos<<")"<<endl;
         path.pop_front();
-   }
-}
+    }
 
+    cout<<endl<<"A* search costs "<<cost<<" node expansion"<<endl;
+    return;
+}
 
 
 int main(){

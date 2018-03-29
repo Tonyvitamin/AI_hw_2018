@@ -1,78 +1,94 @@
 BFS -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
+
 BFS Search starts :
  target is (-1, -4)
 Reach the destination (-1, -4)
-0 0
-2 0
-2 7
-2 1
--1 1
--1 -4
-Time cost is 0.000386 sec
+The path which BFS found :
+initial      (0, 0)
+(x+) 2   (2, 0)
+(y+) 7   (2, 7)
+(y-) 6   (2, 1)
+(x-) 3   (-1, 1)
+(y-) 5   (-1, -4)
+BFS costs 994 node expansion
+Time cost is 0.000423 sec
 
 IDS -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
-IDS search start :
- target is (-1,-4) with depth 15
+IDS Search starts :
+ target is (-1,-4)
 Reach the destination (-1, -4)
-direction is 0 move 0 (0, 0)
-direction is 1 move 2 (2, 0)
-direction is 2 move 7 (2, 7)
-direction is 4 move 6 (2, 1)
-direction is 3 move 3 (-1, 1)
-direction is 4 move 5 (-1, -4)
-Time cost is 0.001263 sec
+The path IDS found :
+initial     (0, 0)
+(x+)   2     (2, 0)
+(y+)   7     (2, 7)
+(y-)   6     (2, 1)
+(x-)   3     (-1, 1)
+(y-)   5     (-1, -4)
+Time cost is 0.001285 sec
 
 A* -1 -4 2 7 6 3 5 2 1 6 6 9 3 1 4 8 2 
-A search start :
- target is (-1,-4) with depth 15
-target address (-1, -4)found
-0 0 at depth 0
-0 0 at depth 1
-0 -7 at depth 2
--6 -7 at depth 3
--6 -4 at depth 4
--1 -4 at depth 5
-Time cost is 0.000972 sec
+
+A* Search starts :
+ target is (-1,-4)
+Reach the destination (-1, -4)
+The path which A* search found :
+initial      (0, 0)
+(S) 2   (0, 0)
+(y-) 7   (0, -7)
+(x-) 6   (-6, -7)
+(y+) 3   (-6, -4)
+(x+) 5   (-1, -4)
+
+A* search costs 2806 node expansion
+Time cost is 0.00115 sec
 
 BFS 22 9 5 3 9 7 4 2 1 3 5 6 2 8 1 3 7 7 4 4 2 9 8 6 1 7 2 5 5 4 
+
 BFS Search starts :
  target is (22, 9)
 Reach the destination (22, 9)
-0 0
-5 0
-8 0
-17 0
-17 7
-21 7
-21 9
-22 9
-Time cost is 0.004155 sec
+The path which BFS found :
+initial      (0, 0)
+(x+) 5   (5, 0)
+(x+) 3   (8, 0)
+(x+) 9   (17, 0)
+(y+) 7   (17, 7)
+(x+) 4   (21, 7)
+(y+) 2   (21, 9)
+(x+) 1   (22, 9)
+BFS costs 19661 node expansion
+Time cost is 0.004156 sec
 
 IDS 22 9 5 3 9 7 4 2 1 3 5 6 2 8 1 3 7 7 4 4 2 9 8 6 1 7 2 5 5 4 
-IDS search start :
- target is (22,9) with depth 28
+IDS Search starts :
+ target is (22,9)
 Reach the destination (22, 9)
-direction is 0 move 0 (0, 0)
-direction is 1 move 5 (5, 0)
-direction is 1 move 3 (8, 0)
-direction is 1 move 9 (17, 0)
-direction is 2 move 7 (17, 7)
-direction is 1 move 4 (21, 7)
-direction is 2 move 2 (21, 9)
-direction is 1 move 1 (22, 9)
-Time cost is 0.022739 sec
+The path IDS found :
+initial     (0, 0)
+(x+)   5     (5, 0)
+(x+)   3     (8, 0)
+(x+)   9     (17, 0)
+(y+)   7     (17, 7)
+(x+)   4     (21, 7)
+(y+)   2     (21, 9)
+(x+)   1     (22, 9)
+Time cost is 0.027545 sec
 
 A* 22 9 5 3 9 7 4 2 1 3 5 6 2 8 1 3 7 7 4 4 2 9 8 6 1 7 2 5 5 4 
-A search start :
- target is (22,9) with depth 28
-target address (22, 9)found
-0 0 at depth 0
-5 0 at depth 1
-5 3 at depth 2
-14 3 at depth 3
-21 3 at depth 4
-21 7 at depth 5
-21 9 at depth 6
-22 9 at depth 7
-Time cost is 0.002951 sec
+
+A* Search starts :
+ target is (22,9)
+Reach the destination (22, 9)
+The path which A* search found :
+initial      (0, 0)
+(x+) 5   (5, 0)
+(y+) 3   (5, 3)
+(x+) 9   (14, 3)
+(x+) 7   (21, 3)
+(y+) 4   (21, 7)
+(y+) 2   (21, 9)
+(x+) 1   (22, 9)
+
+A* search costs 12486 node expansion
+Time cost is 0.003208 sec
 
