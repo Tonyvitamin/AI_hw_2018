@@ -99,14 +99,7 @@ void BFS(deque<int> steps, int x, int y){
             xplus->last = bfs.front();
             temp_node.push_back(xplus);
             record.push_back(xplus);
-            /*if(x==xplus->xpos && y==xplus->ypos){
-                cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                gettimeofday(&tend, NULL);
-                timersub(&tend, &tstart, &diff);
-                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-                judge = 1;
-                break;
-            }*/
+
             //+y
             node_numbers++;
             struct node_bfs * yplus = new node_bfs();
@@ -118,14 +111,6 @@ void BFS(deque<int> steps, int x, int y){
             yplus->last = bfs.front();
             temp_node.push_back(yplus);
             record.push_back(yplus);
-            /*if(x==yplus->xpos && y==yplus->ypos){
-                cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                gettimeofday(&tend, NULL);
-                timersub(&tend, &tstart, &diff);
-                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-                judge = 1;
-                break;
-            }*/
 
             //-x
             node_numbers++;
@@ -138,14 +123,7 @@ void BFS(deque<int> steps, int x, int y){
             xminus->last = bfs.front();
             temp_node.push_back(xminus);
             record.push_back(xminus);
-            /*if(x==xminus->xpos && y==xminus->ypos){
-                cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                gettimeofday(&tend, NULL);
-                timersub(&tend, &tstart, &diff);
-                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-                judge = 1;
-                break;
-            }*/
+
             //-y
             node_numbers++;
             struct node_bfs * yminus = new node_bfs();
@@ -157,14 +135,7 @@ void BFS(deque<int> steps, int x, int y){
             yminus->last = bfs.front();
             temp_node.push_back(yminus);
             record.push_back(yminus);
-            /*if(x==yminus->xpos && y==yminus->ypos){
-                cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                gettimeofday(&tend, NULL);
-                timersub(&tend, &tstart, &diff);
-                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-                judge = 1;
-                break;
-            }*/
+
             //skip
             node_numbers++;
             struct node_bfs * skip = new node_bfs();
@@ -176,14 +147,7 @@ void BFS(deque<int> steps, int x, int y){
             skip->last = bfs.front();
             temp_node.push_back(skip);
             record.push_back(skip);
-            /*if(x==yminus->xpos && y==yminus->ypos){
-                cout<<"Reach the destination ("<<x<<", "<<y<<")"<<endl;
-                gettimeofday(&tend, NULL);
-                timersub(&tend, &tstart, &diff);
-                time_used = diff.tv_sec + (double) diff.tv_usec / 1000000.0;
-                judge = 1;
-                break;
-            }*/
+
             bfs.pop_front();
         }
         // put all node into the real deque 
@@ -193,6 +157,7 @@ void BFS(deque<int> steps, int x, int y){
                 temp_node.pop_front();
             }
         }
+        ///// goal state reached and then print out result
         else {
             struct node_bfs * cur_node = record[node_numbers];
             deque<node_bfs * > path;
