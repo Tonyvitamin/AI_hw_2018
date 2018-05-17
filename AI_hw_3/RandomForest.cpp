@@ -33,13 +33,25 @@ RandomForest::RandomForest(int n_tree, int n_fearture){
     }
 }
 // Random forest train
+////// 120 data for train and select 100 for train actual
+////// 30  data for test
 void RandomForest::RandomForest_train(matrix & m){
+    cout<<"This forest each tree is trained by 100 data from "<<m.n_rows()<<" data"<<endl;
     vector<int> all_columns = range(m.n_columns()-1);
     for(int i=0;i<trees.size();i++){
         CARTreeNode & tree = trees[i];
         random_shuffle(all_columns.begin(), all_columns.end());
         vector<int> subset = slice(all_columns, 0, n_features);
-		tree.CART_train(m, subset);
+        //for(int i = 0 )
+        //// select 100 from 120 data randomly
+        vector<int> rows = range(120);
+        random_shuffle(rows.begin(), rows.end());
+        rows.resize(100);
+        vector<int> training_cols = range(m.n_columns());
+        matrix training = m.submatrix(rows, training_cols);
+
+		//tree.CART_train(training, subset);
+        tree.CART_train(training, all_columns);
     }
 }
 

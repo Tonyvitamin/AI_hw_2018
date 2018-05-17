@@ -102,7 +102,7 @@ void matrix::split(int column_index, double value, matrix &l, matrix&r){
 	vector<int> r_rows;
 	for(int i = 0; i < elements.size(); i++) {
 		double element = elements[i][column_index];
-		if(element < value) {
+		if(element <= value) {
 			l_rows.push_back(i);
 		}
 		else {
