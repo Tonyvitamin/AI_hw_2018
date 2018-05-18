@@ -1,17 +1,15 @@
 # AI_hw_2018
 ## AI homework 
 
-This repository contains 2018 NCTU AI introduction homework 
+This repository contains 2018 NCTU Introduction to AI homework 
 
 ## AI homework 1  -> search
-The goal this homework is to test three search methods. =>  **" BFS, IDS, A* search"**
+The goal of this homework is to implement three search methods. =>  **" BFS, IDS, A* search"**
 
 
-BFS IDS are finished
+## AI homework 2 -> learning
+The goal of this homework is to build a learning model based on CART and Random Forest 
 
-A* search => heuristic function is set while g_function which means real cost is not yet set
-
-
-
+In this home work, I revised the code the implement to train and test iris.txt
 
 
