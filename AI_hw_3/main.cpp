@@ -17,9 +17,8 @@ using namespace std;
     root.CART_train
 }*/
 
-int train_and_test_alldata(matrix &m){
-    
-    /*int n_attributes = m.n_columns();
+double with_all_data(matrix &m){
+    int n_attributes = m.n_columns();
     RandomForest * RF = new RandomForest(10, n_attributes);
 
     // train whole data
@@ -40,7 +39,14 @@ int train_and_test_alldata(matrix &m){
 		}
 	}
 	double percent = right * 100.0 / m.n_rows();
-	return percent;*/
+	return percent;
+}
+
+int train_and_test(matrix &m){
+    
+    /* train and test use the same data */
+    // double percent = with_all_data(m);
+    // return percent;
 
 
     // separate training data and testing data randomly with 120 : 30
@@ -99,7 +105,7 @@ int main(){
     //fstream f1("iris.txt");
     matrix m;
     m.load("iris.txt");
-    double correct_rate = train_and_test_alldata(m);
+    double correct_rate = train_and_test(m);
     cout<<"Testing data :\nCorrection rate is"<<" "<<correct_rate<<endl;
  
 }
