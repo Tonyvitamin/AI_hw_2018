@@ -7,13 +7,14 @@
 using namespace std;
 
 
-
+// initiate function 
 CARTreeNode::CARTreeNode(){
     left = right = NULL;
 	attribute = -1;
     threshold_value = 1337.1337;
 	gain = -1337.0;
 }
+// function used to destroy the node 
 CARTreeNode::~CARTreeNode(){
 	if(left != NULL) {
 		delete left;
@@ -22,18 +23,28 @@ CARTreeNode::~CARTreeNode(){
 		delete right;
 	}
 }
+// sort values of a specific attribute and calculate a series of threshold values then return the threshold_value 
 vector<double> value_sort(vector<double> samples){
+
+    vector<double> split_value;
+    /// In case of the single sample, just return the value itself
+    if(samples.size() == 1){
+        split_value.push_back(samples[0]);
+        return split_value;
+    }
+
     vector<double> temp;
     for(int i = 0 ;i<samples.size();i++)
         temp.push_back(samples[i]);
     sort(temp.begin(), temp.end());
-    vector<double> split_value;
+
     for(int i = 0 ; i < temp.size()-1 ; i++){
+        // use "mean of two's sum" as threshold_value
         split_value.push_back((temp[i]+temp[i+1])/2);
     }
     return split_value;
 }
-
+// split the samples into lesser and greater 
 void split_two_group(vector<double>  samples, vector<double> & class_label, double value, vector<double> &lesser, vector<double> &greater){
     for(int i =0 ; i<samples.size();i++){
         if(samples[i]<=value){
@@ -45,7 +56,8 @@ void split_two_group(vector<double>  samples, vector<double> & class_label, doub
     }
 }
 
-// convert each original class into class cluster distribution
+// convert class list  into class cluster distribution
+// i.e.  classes[0] = 10 , classes[1] = 3 , classes[2] = 2 , with the list containing 15 object
 vector<int> list_to_discrete(const vector<double> & list, int num_classes) {
 	vector<int> classes(num_classes, 0);
 	for(int i = 0; i < list.size(); i++) {
@@ -57,6 +69,7 @@ vector<int> list_to_discrete(const vector<double> & list, int num_classes) {
 	return classes;
 }
 // convert to probability for each class
+// i.e. p[0] = 0.3 , p[1] = 0.4 , p[2] = 0.3 
 vector<double> discrete_p_values(const vector<double> & list, int num_classes) {
 	vector<int> discrete = list_to_discrete(list, num_classes);
 	vector<double> p_values;
@@ -97,6 +110,7 @@ void CARTreeNode::CART_train(matrix &m , vector<int> attributes){
     vector<int> subset = attributes;
 
     // Section to change attributes used to split a node
+    // In "iris.txt" can change from 1 to 4 attributes
     //attributes.resize(1);
     attributes.resize(2);
     //attributes.resize(3);
@@ -105,19 +119,19 @@ void CARTreeNode::CART_train(matrix &m , vector<int> attributes){
     /// class value
     vector<double> class_label = m.column(-1);
 
-	//Decide which column to split on
+	//Elements used to decide which column and value to split on
 	double max_gain = -10000.0;
 	int max_col = 0;
 	double max_value = 0.0;
 
-
+    // for each attributes used to split a node 
     for(int i = 0 ; i<attributes.size();i++){
         int attribute = attributes[i];
 
-        //cout<<"attribute col is "<<attribute<<" "<<m.n_rows()<<endl;
         vector<double> samples = m.column(attribute);
 
         vector<double> split_value = value_sort(samples);
+        // for all the possible threshold values, choose the best one 
         for(int j = 0 ; j<split_value.size(); j++){
             vector<double> lesser, greater;
             int split_v = split_value[j];

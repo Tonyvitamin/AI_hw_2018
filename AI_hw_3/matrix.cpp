@@ -34,6 +34,7 @@ void matrix::load(string filename){
         row.push_back(v2);
         row.push_back(v3);
         row.push_back(v4);
+        // store class value in the last field
         if(strcmp(word, "Iris-setosa")==0)
             row.push_back(0);
         else if(strcmp(word, "Iris-versicolor")==0)
