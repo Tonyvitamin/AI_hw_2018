@@ -18,13 +18,13 @@ vector<int> range(int num){
 }
 
 // load the data into the matrix
+// set "iris.txt" for the convenient of reading the input data
 void matrix::load(string filename){
     FILE * f_input;
     f_input = fopen(filename.c_str(), "r");
     int lineNumber = 0;
     int attrNumber = 0;
     string line;
-    //map<string, int> label_index;
     double v1, v2, v3, v4;
     char  word[80];
     /// iris.txt input format
@@ -46,17 +46,17 @@ void matrix::load(string filename){
     cout<<lineNumber<<" rows of object and "<<4<<" attributes"<<endl;
 
     // print each row of data
-    for(int i = 0 ;i < elements.size();i++){
+    /*for(int i = 0 ;i < elements.size();i++){
         int j;
         for(j = 0 ; j< elements[0].size()-1;j++){
             cout<<elements[i][j]<<" ";
         }
         cout<<elements[i][j]<<endl;
-    }
+    }*/
 
     fclose(f_input);
 }
-// return the number of column except class label
+// return the number of column(including class label)
 int matrix::n_columns(){
     return elements[0].size();
 }
@@ -96,7 +96,7 @@ matrix matrix::shuffled(){
 	return submatrix(row_indices, column_indices);
 }
 
-
+// split a matrix into two part (left and right)
 void matrix::split(int column_index, double value, matrix &l, matrix&r){
 	vector<int> l_rows;
 	vector<int> r_rows;

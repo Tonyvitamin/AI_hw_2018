@@ -3,27 +3,6 @@
 
 using namespace std;
 
-template<typename T>
-int inline negative_index_convert(std::vector<T> list, int index) {
-    //TODO: Bounds checking?
-    if(index >= 0) {
-        return index;
-    }
-    else {
-        return index + list.size();
-    }
-}
-template<typename T>
-std::vector<T> inline slice(std::vector<T> list, int start=0, int end=-1, int step=1) {
-    vector<T> result;
-    start = negative_index_convert(list, start);
-    end = negative_index_convert(list, end);
-    for(int i = start; i < end; i += step) {
-        T element = list[i];
-        result.push_back(element);
-    }
-    return result;
-}
 /// init a Random Forest  
 RandomForest::RandomForest(int n_tree, int n_fearture){
     this->n_trees = n_tree;
@@ -36,17 +15,17 @@ RandomForest::RandomForest(int n_tree, int n_fearture){
 ////// 120 data for train and select 100 for train actual
 ////// 30  data for test
 void RandomForest::RandomForest_train(matrix & m){
-    cout<<"This forest each tree is trained by 100 data from "<<m.n_rows()<<" data"<<endl;
+    cout<<"Each tree of this forest is trained by 15 random data from "<<m.n_rows()<<" data"<<endl;
+    cout<<"Number of decision tree is "<<trees.size()<<endl;
     vector<int> all_columns = range(m.n_columns()-1);
     for(int i=0;i<trees.size();i++){
         CARTreeNode & tree = trees[i];
         random_shuffle(all_columns.begin(), all_columns.end());
-        vector<int> subset = slice(all_columns, 0, n_features);
-        //for(int i = 0 )
+
         //// select 100 from 120 data randomly
-        vector<int> rows = range(120);
+        vector<int> rows = range(30);
         random_shuffle(rows.begin(), rows.end());
-        rows.resize(100);
+        rows.resize(15);
         vector<int> training_cols = range(m.n_columns());
         matrix training = m.submatrix(rows, training_cols);
 
@@ -54,9 +33,13 @@ void RandomForest::RandomForest_train(matrix & m){
         tree.CART_train(training, all_columns);
     }
 }
-
+/// Random forest classify
+/// It will return the expected class which the Random Forest classify the test data(row) into 
+/// As for "iris.txt", set the class number for the convenient to experiment 
 int RandomForest::RF_classify(vector<double> & row){
     int class_number[3]={0};
+
+    /// count the possibility distribution of each tree
 	for(int i = 0; i < n_trees; i++) {
 		CARTreeNode & tree = trees[i];
         double max_possibility = 0;
@@ -70,6 +53,8 @@ int RandomForest::RF_classify(vector<double> & row){
         }
         class_number[max_index]++;
     }
+
+    /// select the most one as the vote result 
     int index =50;
     int lower_bound = 0;
     for(int i = 0 ; i<3;i++){
@@ -78,5 +63,6 @@ int RandomForest::RF_classify(vector<double> & row){
             index = i;
         }
     }
-        return index;
+    //cout<<"index is "<<index<<endl;
+    return index;
 }

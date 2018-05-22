@@ -8,13 +8,11 @@
 #include "matrix.hpp"
 
 using namespace std;
-
+// Decision tree based on CART
 class CARTreeNode{
 public:
     CARTreeNode();
     ~CARTreeNode();
-    //void dump(string indent);
-    int count();
     void CART_train(matrix &m , vector<int> attributes);
     void train_gini();
     void split_node();

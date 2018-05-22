@@ -2,10 +2,8 @@
 #include <deque>
 
 using namespace std;
-
+// data structure to handle the data
 class matrix{
-
-
 
 public:
     void load(string filename);
@@ -16,10 +14,7 @@ public:
 	matrix submatrix(vector<int> rows, vector<int> columns);
 	void split(int column_index, double value, matrix & l, matrix & r);
 	matrix shuffled();
-	//void merge_rows(matrix & other);
-	//Bracket overloaded operator:
 	vector<double> & operator[](int i);
 	vector<vector<double> > elements;
 };
 vector<int> range(int num);
-vector<int> cluster_transfer(vector<string> &class_label);
