@@ -1,3 +1,3 @@
 #!/bin/bash
-g++ main.cpp matrix.cpp CART.cpp RandomForest.cpp
+g++ -std=c++11 main.cpp matrix.cpp CART.cpp RandomForest.cpp
 ./a.out

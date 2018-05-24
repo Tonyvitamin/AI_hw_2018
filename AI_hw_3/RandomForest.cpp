@@ -1,5 +1,6 @@
 #include "RandomForest.hpp"
-
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
 
 using namespace std;
 
@@ -12,26 +13,29 @@ RandomForest::RandomForest(int n_tree, int n_fearture){
     }
 }
 // Random forest train
-/* Here can be revised to train differnet number of data to train */
+/* Change here to train differnet number of data  */
+// In "Iris.txt" case, I only use the following two case
 ////// 30  data for train and select 15 for actual train <=> 150 data for test 
 ////// 
 ////// 120 data for train and select 100 for actual train <=> 30  data for test
 ////// 
 void RandomForest::RandomForest_train(matrix & m){
     cout<<"Each tree of this forest is trained by 15 random data from "<<m.n_rows()<<" data"<<endl;
-    //    cout<<"Each tree of this forest is trained by 100 random data from "<<m.n_rows()<<" data"<<endl;
+    //cout<<"Each tree of this forest is trained by 100 random data from "<<m.n_rows()<<" data"<<endl;
 
     cout<<"Number of decision tree is "<<trees.size()<<endl;
 
-    // set up index for all attributes field 
+    // set up index for all attributes field //
     vector<int> all_columns = range(m.n_columns()-1);
     for(int i=0;i<trees.size();i++){
         CARTreeNode & tree = trees[i];
+        srand(time(0));
         random_shuffle(all_columns.begin(), all_columns.end());
 
         //// Make selection here ////
         vector<int> rows = range(30);
-        random_shuffle(rows.begin(), rows.end());
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        shuffle (rows.begin(), rows.end(), std::default_random_engine(seed));
         rows.resize(15);
         vector<int> training_cols = range(m.n_columns());
         matrix training = m.submatrix(rows, training_cols);

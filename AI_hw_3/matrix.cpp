@@ -7,6 +7,9 @@
 #include <cstdlib> 
 #include <string>
 #include <vector>
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
+
 
 using namespace std;
 vector<int> range(int num){
@@ -92,7 +95,9 @@ matrix matrix::submatrix(vector<int> rows, vector<int> cols){
 // shuffle function to get random training data or attribute
 matrix matrix::shuffled(){
 	vector<int> row_indices = range(n_rows());
-	random_shuffle(row_indices.begin(), row_indices.end());
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    shuffle(row_indices.begin(), row_indices.end(), std::default_random_engine(seed));
+
 	vector<int> column_indices = range(n_columns());
 	return submatrix(row_indices, column_indices);
 }

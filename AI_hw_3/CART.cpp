@@ -3,7 +3,8 @@
 #include <cassert>
 #include <iostream>
 #include <algorithm>
-
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
 using namespace std;
 
 
@@ -106,11 +107,13 @@ void CARTreeNode::CART_train(matrix &m , vector<int> attributes){
     
 
     // random subset of attriubte 
-    random_shuffle(attributes.begin(), attributes.end());
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    shuffle (attributes.begin(), attributes.end(), std::default_random_engine(seed));
     vector<int> subset = attributes;
 
     // Section to change attributes used to split a node
     // In "iris.txt" can change from 1 to 4 attributes
+    /*** Change here to change different size of attribute to split node ***/
     //attributes.resize(1);
     attributes.resize(2);
     //attributes.resize(3);

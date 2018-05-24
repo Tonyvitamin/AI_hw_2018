@@ -36,6 +36,7 @@ double with_all_data(matrix &m){
 int train_and_test(matrix &m){
     
     // separate training data and testing data randomly with 120 : 30
+	// change here and RandomForest.cpp 36~39 to test different data set
     matrix inputm = m.shuffled();
     vector<int> all_columns = range(m.n_columns());
     vector<int> training_rows = range(30);
@@ -44,6 +45,7 @@ int train_and_test(matrix &m){
         testing_rows.push_back(i);
     
     int n_attributes = m.n_columns()-1;
+	////// change here to test different number of trees forming a random forest
     RandomForest * RF = new RandomForest(100, n_attributes);
     matrix training = inputm.submatrix(training_rows, all_columns);
     matrix testing = inputm.submatrix(testing_rows, all_columns);
