@@ -10,6 +10,6 @@ The goal of this homework is to implement three search methods. =>  **" BFS, IDS
 ## AI homework 3 -> learning
 The goal of this homework is to build a learning model based on CART and Random Forest 
 
-In this home work, I revised the code the implement to train and test iris.txt
+In this home work, I revised the code from https://github.com/wreardan/cart to train and test iris.txt
 
 
