@@ -1,7 +1,7 @@
 # AI_hw_2018
 ## AI homework 
 
-This repository contains 2018 NCTU Introduction to AI homework 
+This repository contains 2018 NCTU Introduction to AI homework (Undergraduate)
 
 ## AI homework 1  -> search
 The goal of this homework is to implement three search methods. =>  **" BFS, IDS, A* search"**
